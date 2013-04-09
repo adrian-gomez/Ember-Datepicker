@@ -64,7 +64,7 @@ App.Router.map(function() {
 App.CalendarRoute = Ember.Route.extend({
   model: function (params) {
     var obj = {
-       weeks: calendar.getDaysInMonth(params.currentMonth, "2013"),
+       weeks: calendar.getDaysInMonth(params.currentMonth, params.currentYear),
        currentMonth: params.currentMonth,
        currentYear: params.currentYear
     };
