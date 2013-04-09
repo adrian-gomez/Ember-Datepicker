@@ -107,7 +107,7 @@ App.CalendarController = Ember.Controller.extend({
      var year = this.get('content.currentYear');
      console.log(year);
      var date = new Date(year, month-1, day);
-     Ember.set('App.DateValue.value',moment(date).format("dddd, MMMM Do YYYY"));
+     Ember.set('App.DateValue.value',moment(date).format("dddd, MMMM Do, YYYY"));
   },
   changeMonth: function(monthMove) {
      var weeks;
