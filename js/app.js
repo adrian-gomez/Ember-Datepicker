@@ -7,7 +7,7 @@ var calendar = {
     
     var month = month;
     var year = year;
-    var daysInMonth = moment(year + month, "YYYY-MM").daysInMonth();
+    var daysInMonth = moment(year + "-" +  month, "YYYY-M").daysInMonth();
     var weeks = [];
     var days = [];
     var j = 0;
@@ -77,7 +77,6 @@ App.Datepicker = Ember.TextField.extend({
       var date = new Date();
       var month = date.getMonth()+1;
       var year = date.getFullYear();
-      console.log(year);
       var route = '#/calendar/'
       window.location.href= route + year + '/' + month;
     },
@@ -92,7 +91,6 @@ App.CalendarController = Ember.Controller.extend({
   next: function() {
     var currentMonth = this.get('content.currentMonth');
     var nextMonth = parseInt(currentMonth)+1;
-
     this.changeMonth(nextMonth);
   },
   prev: function() {
@@ -104,7 +102,6 @@ App.CalendarController = Ember.Controller.extend({
      var day = day;
      var month = this.get('content.currentMonth');
      var year = this.get('content.currentYear');
-     console.log(year);
      var date = new Date(year, month-1, day);
      Ember.set('App.DateValue.value',moment(date).format("dddd, MMMM Do, YYYY"));
   },
