@@ -106,15 +106,17 @@ App.CalendarController = Ember.Controller.extend({
      Ember.set('App.DateValue.value',moment(date).format("dddd, MMMM Do, YYYY"));
   },
   changeMonth: function(monthMove) {
-     var weeks;
-    if (monthMove > 12) {
+    var weeks;
+    var yearEnd = 12;
+    var yearBegin = 1;
+    if (monthMove > yearEnd) {
       monthMove = 1;
       this.set('content.currentMonth', monthMove);
       var currentYear = this.get('content.currentYear');
       this.set('content.currentYear', parseInt(currentYear)+1);
       weeks = calendar.getDaysInMonth(monthMove,this.get('content.currentYear'));
       this.set('content.weeks', weeks);
-    } else if (monthMove < 1) {
+    } else if (monthMove < yearBegin) {
       monthMove = 12;
       this.set('content.currentMonth', monthMove);
       var currentYear = this.get('content.currentYear');
