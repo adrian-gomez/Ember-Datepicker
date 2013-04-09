@@ -20,7 +20,6 @@ var calendar = {
     var firstDayOfWeek = firstDay.getDay();
 
     while (firstDayOfWeek != j) {
-      var date = new Date(year, dateObjMonth, -1);
       days.push(' ');
       j++;
     }
