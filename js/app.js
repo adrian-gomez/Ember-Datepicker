@@ -57,7 +57,7 @@ App.Store = DS.Store.extend({
 });
 
 App.Router.map(function() {
-    this.resource('calendar', { path: '/calendar/:currentYear/:currentMonth'});
+    this.resource('calendar', {path: 'calendar/:currentYear/:currentMonth'});
 });
 
 App.CalendarRoute = Ember.Route.extend({
@@ -68,6 +68,9 @@ App.CalendarRoute = Ember.Route.extend({
        currentYear: params.currentYear
     };
     return obj;
+  },
+  redirect: function() {
+  
   }
 });
 
@@ -91,12 +94,30 @@ App.CalendarController = Ember.Controller.extend({
   next: function() {
     var currentMonth = this.get('content.currentMonth');
     var nextMonth = parseInt(currentMonth)+1;
-    this.changeMonth(nextMonth);
+    if (nextMonth > 12) {
+      nextMonth = 1;
+      this.set('content.currentMonth', nextMonth);
+      var currentYear = this.get('content.currentYear');
+      this.set('content.currentYear', parseInt(currentYear)+1);  
+    }
+    var route = '#/calendar/'
+    var year = this.get('content.currentYear');
+    window.location.href= route + year + '/' + nextMonth; 
+    /* var router = this.get('target');
+    router.transitionTo('calendar' + year + parseInt(currentMonth)+1); */
   },
   prev: function() {
       var currentMonth = this.get('content.currentMonth');
       var prevMonth = parseInt(currentMonth)-1;
-      this.changeMonth(prevMonth);
+      if (prevMonth < 1) {
+          prevMonth = 12;
+          this.set('content.currentMonth', prevMonth);
+          var currentYear = this.get('content.currentYear');
+          this.set('content.currentYear', parseInt(currentYear)-1);
+      }
+      var route = '#/calendar/'
+      var year = this.get('content.currentYear');
+      window.location.href= route + year + '/' + prevMonth;
   },
   select: function(day) {
      var day = day;
@@ -104,30 +125,6 @@ App.CalendarController = Ember.Controller.extend({
      var year = this.get('content.currentYear');
      var date = new Date(year, month-1, day);
      Ember.set('App.DateValue.value',moment(date).format("dddd, MMMM Do, YYYY"));
-  },
-  changeMonth: function(monthMove) {
-    var weeks;
-    var yearEnd = 12;
-    var yearBegin = 1;
-    if (monthMove > yearEnd) {
-      monthMove = 1;
-      this.set('content.currentMonth', monthMove);
-      var currentYear = this.get('content.currentYear');
-      this.set('content.currentYear', parseInt(currentYear)+1);
-      weeks = calendar.getDaysInMonth(monthMove,this.get('content.currentYear'));
-      this.set('content.weeks', weeks);
-    } else if (monthMove < yearBegin) {
-      monthMove = 12;
-      this.set('content.currentMonth', monthMove);
-      var currentYear = this.get('content.currentYear');
-      this.set('content.currentYear', parseInt(currentYear)-1);
-      weeks = calendar.getDaysInMonth(monthMove,this.get('content.currentYear'));
-      this.set('content.weeks', weeks);
-    } else {
-      this.set('content.currentMonth', monthMove);
-      weeks = calendar.getDaysInMonth(monthMove,this.get('content.currentYear'));
-      this.set('content.weeks', weeks);
-    }
   }
 });
 
