@@ -34,7 +34,7 @@
     
     <div class="row">
       <div class="span1"><a href="#" {{ action prev }} class="btn"> Prev </a></div>
-      <div class="span4"> <h2>{{ month model.currentMonth }}</h2>   </div>
+      <div class="span4"> <h2>{{ month model.month }}</h2>   </div>
       <div class="span1"><a href="#" {{ action next }} class="btn"> Next </a></div>
     </div>
    
@@ -48,7 +48,6 @@
           <td>Fri</td>
           <td>Sat</td>
         </tr>
-
           {{#each model.weeks}}
               <tr>
                 {{#each days}}

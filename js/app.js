@@ -2,6 +2,7 @@
 /* Code below */
 var calendar = {
   getDaysInMonth: function(month, year) {
+    console.log('get days in month');
     var currentDate = new Date();
     // just make an array of this month
     
@@ -49,7 +50,13 @@ var calendar = {
   } // end get month
 } // end calendar object
 
-App = Ember.Application.create();
+App = Ember.Application.create({
+  title: 'Date picker example',
+  calendar: {
+    month: new Date().getMonth+1,
+    year: new Date().getFullYear()
+  }
+});
 
 App.Store = DS.Store.extend({
   revision: 12,
@@ -57,20 +64,36 @@ App.Store = DS.Store.extend({
 });
 
 App.Router.map(function() {
-    this.resource('calendar', {path: 'calendar/:currentYear/:currentMonth'});
+    this.route('home'),
+    this.resource('calendar', {path: 'calendar/:year/:month'});
 });
 
 App.CalendarRoute = Ember.Route.extend({
+  activate: function() {
+    $(document).attr('title', 'Date Picker');
+  },
+  serialize: function(obj) {
+    return {
+        year: obj.year, month: obj.month
+    }
+  },
   model: function (params) {
     var obj = {
-       weeks: calendar.getDaysInMonth(params.currentMonth, params.currentYear),
-       currentMonth: params.currentMonth,
-       currentYear: params.currentYear
+       weeks: calendar.getDaysInMonth(params.year, params.month),
+       year: params.year,
+       month: params.month
     };
     return obj;
-  },
-  redirect: function() {
-  
+  }, 
+  setUpController: function(controller, model) {
+    // var obj = {
+    //   year: model.year,
+    //   month: model.month,
+    // };
+    // obj.weeks = calendar.getDaysInMonth(model.year, model.month);
+    // controller.set('content', obj);
+    
+    controller.set('content', model)
   }
 });
 
@@ -86,38 +109,45 @@ App.Datepicker = Ember.TextField.extend({
     valueBinding: 'App.DateValue.value'
 });
 
-App.DateValue = Em.Object.create({
-    value: ''
-});
 
 App.CalendarController = Ember.Controller.extend({
   next: function() {
-    var currentMonth = this.get('content.currentMonth');
+    var currentMonth = this.get('content.month');
     var nextMonth = parseInt(currentMonth)+1;
     if (nextMonth > 12) {
       nextMonth = 1;
-      this.set('content.currentMonth', nextMonth);
-      var currentYear = this.get('content.currentYear');
-      this.set('content.currentYear', parseInt(currentYear)+1);  
+      this.set('content.month', nextMonth);
+      var currentYear = this.get('content.year');
+      this.set('content.year', parseInt(currentYear)+1);  
     }
-    var route = '#/calendar/'
-    var year = this.get('content.currentYear');
-    window.location.href= route + year + '/' + nextMonth; 
-    /* var router = this.get('target');
-    router.transitionTo('calendar' + year + parseInt(currentMonth)+1); */
+    var year = this.get('content.year');
+    var router = this.get('target');
+    
+    router.transitionTo('calendar', {
+      year: year,
+      month: nextMonth
+    });
+    weeks = calendar.getDaysInMonth(year, nextMonth);
+    this.set('content.weeks', weeks);
+    
   },
   prev: function() {
-      var currentMonth = this.get('content.currentMonth');
+      var currentMonth = this.get('content.month');
       var prevMonth = parseInt(currentMonth)-1;
       if (prevMonth < 1) {
           prevMonth = 12;
-          this.set('content.currentMonth', prevMonth);
-          var currentYear = this.get('content.currentYear');
-          this.set('content.currentYear', parseInt(currentYear)-1);
+          this.set('content.month', prevMonth);
+          var currentYear = this.get('content.year');
+          this.set('content.year', parseInt(currentYear)-1);
       }
-      var route = '#/calendar/'
-      var year = this.get('content.currentYear');
-      window.location.href= route + year + '/' + prevMonth;
+      var router = this.get('target');
+      var year = this.get('content.year');
+      router.transitionTo('calendar', {
+        year: year,
+        month: prevMonth
+      });
+      weeks = calendar.getDaysInMonth(year, prevMonth);
+      this.set('content.weeks', weeks);
   },
   select: function(day) {
      var day = day;
