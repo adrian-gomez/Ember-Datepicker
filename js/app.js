@@ -2,7 +2,6 @@
 /* Code below */
 var calendar = {
   getDaysInMonth: function(month, year) {
-    console.log('get days in month');
     var currentDate = new Date();
     // just make an array of this month
     
@@ -86,13 +85,6 @@ App.CalendarRoute = Ember.Route.extend({
     return obj;
   }, 
   setUpController: function(controller, model) {
-    // var obj = {
-    //   year: model.year,
-    //   month: model.month,
-    // };
-    // obj.weeks = calendar.getDaysInMonth(model.year, model.month);
-    // controller.set('content', obj);
-    
     controller.set('content', model)
   }
 });
