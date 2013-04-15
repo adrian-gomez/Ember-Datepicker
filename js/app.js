@@ -101,6 +101,9 @@ App.Datepicker = Ember.TextField.extend({
     valueBinding: 'App.DateValue.value'
 });
 
+App.DateValue = Em.Object.create({
+    value: ''
+});
 
 App.CalendarController = Ember.Controller.extend({
   next: function() {
@@ -143,8 +146,8 @@ App.CalendarController = Ember.Controller.extend({
   },
   select: function(day) {
      var day = day;
-     var month = this.get('content.currentMonth');
-     var year = this.get('content.currentYear');
+     var month = this.get('content.month');
+     var year = this.get('content.year');
      var date = new Date(year, month-1, day);
      Ember.set('App.DateValue.value',moment(date).format("dddd, MMMM Do, YYYY"));
   }
